@@ -228,16 +228,16 @@ def main():
     camera_txt = os.path.join(root, "sparse", "0", "cameras.txt")
     os.makedirs(depths_dir, exist_ok=True)
 
-    convert_jpg_to_png_overwrite(images_dir)
+    # convert_jpg_to_png_overwrite(images_dir)
 
-    keep_first_four_cameras(camera_txt)
+    # keep_first_four_cameras(camera_txt)
 
-    # Run tasks
-    merge_pano_images(images_dir, images_dir)
+    # # Run tasks
+    # merge_pano_images(images_dir, images_dir)
     process_images_txt(images_txt)
 
     # Mask Generation
-    process_images_in_folder(images_dir, masks_dir)
+    # process_images_in_folder(images_dir, masks_dir)
 
     print("🎉 ALL DONE!")
 
@@ -252,3 +252,4 @@ def main():
 if __name__ == "__main__":
 
     main()
+
