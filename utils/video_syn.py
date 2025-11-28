@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 # ================= DEFAULT CONFIGURATION =================
 # These are used if you don't provide arguments via command line
-DEFAULT_FPS = 30
+DEFAULT_FPS = 10
 DEFAULT_NUM_VIDEOS = 12
 DEFAULT_PATTERN_TRAIN = 7
 DEFAULT_PATTERN_TEST = 1
