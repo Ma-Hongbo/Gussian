@@ -12,21 +12,23 @@ DEFAULT_FPS = 10
 def parse_filename(filename):
     """
     Parses the filename to extract camera ID and iteration number.
-    Expected format: pano_camera{i}_{xxxx}.png
-    Example: pano_camera0_00001.png
+    Expected format: pano_camera{i}_frame_{xxxxx}.png
+    Example: pano_camera0_frame_00001.png
     
     Returns:
         camera_id (str): e.g., "pano_camera0"
         iteration (int): e.g., 1
     """
-    # Regex to match "pano_camera" followed by digits (Group 1), 
-    # then an underscore, then digits (Group 2)
-    # Adjust regex if your filename prefix is slightly different
-    match = re.search(r"(pano_camera\d+)_(\d+)", filename)
+    # [修改说明] 正则表达式已更新
+    # 匹配逻辑：
+    # 1. (pano_camera\d+) -> Group 1: 捕获 pano_camera 后跟数字 (例如 "pano_camera0")
+    # 2. _frame_          -> 字面量匹配中间的 "_frame_"
+    # 3. (\d+)            -> Group 2: 捕获帧编号数字 (例如 "00001")
+    match = re.search(r"(pano_camera\d+)_frame_(\d+)", filename)
     
     if match:
-        camera_id = match.group(1) # e.g., pano_camera0
-        iteration = int(match.group(2)) # e.g., 00001 -> 1
+        camera_id = match.group(1)  # e.g., pano_camera0
+        iteration = int(match.group(2))  # e.g., 00001 -> 1
         return camera_id, iteration
     return None, None
 
@@ -71,7 +73,7 @@ def create_video_for_camera(camera_id, image_data_list, output_dir, fps):
     Generates a video for a specific camera, sorted by iteration.
     """
     # 1. Sort by iteration number (the first element of the tuple)
-    # This merges train and test images into a single timeline based on 'xxxx'
+    # This merges train and test images into a single timeline based on frame number
     image_data_list.sort(key=lambda x: x[0])
     
     # Extract just the file paths after sorting
@@ -128,14 +130,13 @@ def main():
         os.makedirs(args.out_dir)
 
     # 2. Group images from both directories
-    # We pass a list of directories to scan
     grouped_data = get_grouped_images([args.train_dir, args.test_dir])
     
     sorted_camera_ids = sorted(grouped_data.keys())
     print(f"\nFound {len(sorted_camera_ids)} unique cameras: {sorted_camera_ids}")
 
     if len(sorted_camera_ids) == 0:
-        print("Error: No valid images found matching 'pano_camera{i}_{xxxx}' pattern.")
+        print("Error: No valid images found matching 'pano_camera{i}_frame_{xxxxx}' pattern.")
         return
 
     # 3. Generate one video per camera
